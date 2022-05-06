@@ -1,55 +1,67 @@
-const Header = (props) => {
-  return (
-    <>
-      <h1>{props.course}</h1>
-    </>
-  )
-}
-
-const Content = (props) => {
-  return (
-    <div>
-      <p>{props.part1} {props.exercise1}</p>
-      <p>{props.part2} {props.exercise2}</p>
-      <p>{props.part3} {props.exercise3}</p>
-    </div>
-  )
-}
-
-const Total = (props) => {
-  return (
-    <>
-      <p>Number of exercises {props.exercise1 + props.exercise2 + props.exercise3}</p>
-    </>
-  )
-}
+import { useState } from 'react'
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const HandleGood = () => {
+    setGood(good + 1)
   }
 
+  const HandleNeutral = () => {
+    setNeutral(neutral + 1)
+  }
+
+  const HandleBad = () => {
+    setBad(bad + 1)
+  }
+
+  const ConditionalRender = (props) => {
+    const {goodText, goodStat, neutralText, neutralStat, 
+      allText, allStat, positiveText, positiveStat, badText, badStat} = props;
+    if (good === 0 && neutral === 0 && bad === 0) {
+      return (
+        <p>No feedback given</p>
+      )
+    } else {
+      return (
+        <div>
+          <p>{goodText} {goodStat}</p>
+          <p>{neutralText} {neutralStat}</p>
+          <p>{badText} {badStat}</p>
+          <p>{allText} {allStat}</p>
+          <p>{positiveText} {positiveStat} %</p>
+        </div>
+      )
+    }
+  }
+
+  const text = "good"
+  const text2 = "neutral"
+  const text3 = "bad"
+
+  const Btns = ({text, text2, text3}) => {
+    return (
+      <div>
+        <button onClick = {HandleGood}>{text}</button> 
+        <button onClick = {HandleNeutral}>{text2}</button> 
+        <button onClick = {HandleBad}>{text3}</button>
+      </div>
+    )
+  }
+   
   return (
     <div>
-      <Header course = {course.name}/>
-      <Content part1 = {course.parts[0].name} exercise1 = {course.parts[0].exercises} 
-      part2 = {course.parts[1].name} exercise2 = {course.parts[1].exercises} 
-      part3 = {course.parts[2].name} exercise3 = {course.parts[2].exercises} />
-      <Total exercise1 = {course.parts[0].exercises} exercise2 = {course.parts[1].exercises} exercise3 = {course.parts[2].exercises}/>
+      <h1>give feedback</h1>
+      <Btns text = {text} text2 = {text2} text3 = {text3}></Btns>
+      <h1>Statistics</h1>
+      <ConditionalRender goodText = {text} goodStat = {good}
+        neutralText = {text2} neutralStat = {neutral}
+        badText = {text3} badStat = {bad}
+        allText = "all" allStat = {good + neutral + bad}
+        positiveText = "positive" positiveStat ={good/(good+neutral+bad)*100} ></ConditionalRender>
     </div>
   )
 }
