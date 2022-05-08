@@ -1,42 +1,51 @@
 import { useState } from 'react'
 
+const Statistic = ({text, value}) => {
+  
+  return (
+    <p>{text} {value}</p>
+  )
+}
+
+const Statistics = ({clicks}) => {
+  const total = clicks.good + clicks.bad + clicks.neutral;
+  const positive = clicks.good/(clicks.good+clicks.neutral+clicks.bad)*100
+
+  if (total === 0) {
+    return (
+      <p>No feedback given</p>
+    )
+  }
+
+  return (
+    <div>
+     <Statistic text = "good" value = {clicks.good}/>
+     <Statistic text = "neutral" value = {clicks.neutral}/>
+     <Statistic text = "bad" value = {clicks.bad}/>
+     <Statistic text = "all" value = {total}/>
+     <Statistic text = "positive" value = {positive + '%'}/>
+    </div>
+  )
+  
+}
+
 const App = () => {
   // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
+  const [clicks, setClicks] = useState({good: 0, neutral: 0, bad: 0})
+  
   const HandleGood = () => {
-    setGood(good + 1)
+    setClicks({...clicks, good: clicks.good + 1})
   }
 
   const HandleNeutral = () => {
-    setNeutral(neutral + 1)
+    setClicks({...clicks, neutral: clicks.neutral + 1})
   }
 
   const HandleBad = () => {
-    setBad(bad + 1)
+    setClicks({...clicks, bad: clicks.bad + 1})
   }
 
-  const ConditionalRender = (props) => {
-    const {goodText, goodStat, neutralText, neutralStat, 
-      allText, allStat, positiveText, positiveStat, badText, badStat} = props;
-    if (good === 0 && neutral === 0 && bad === 0) {
-      return (
-        <p>No feedback given</p>
-      )
-    } else {
-      return (
-        <div>
-          <p>{goodText} {goodStat}</p>
-          <p>{neutralText} {neutralStat}</p>
-          <p>{badText} {badStat}</p>
-          <p>{allText} {allStat}</p>
-          <p>{positiveText} {positiveStat} %</p>
-        </div>
-      )
-    }
-  }
+  
 
   const text = "good"
   const text2 = "neutral"
@@ -55,13 +64,11 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <Btns text = {text} text2 = {text2} text3 = {text3}></Btns>
+      <Btns text = {text} 
+        text2 = {text2} 
+        text3 = {text3}></Btns>
       <h1>Statistics</h1>
-      <ConditionalRender goodText = {text} goodStat = {good}
-        neutralText = {text2} neutralStat = {neutral}
-        badText = {text3} badStat = {bad}
-        allText = "all" allStat = {good + neutral + bad}
-        positiveText = "positive" positiveStat ={good/(good+neutral+bad)*100} ></ConditionalRender>
+    <Statistics clicks = {clicks}/>
     </div>
   )
 }
